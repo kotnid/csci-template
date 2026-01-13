@@ -3,6 +3,7 @@
 ## missing template
 - stack
 - queue
+- hash table
 
 ## message from Zyndesu
 hi!
