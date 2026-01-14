@@ -1,8 +1,8 @@
 # csci2100 template 
+- queue
 
 ## missing template
 - stack
-- queue
 - hash table
 
 ## message from Zyndesu
