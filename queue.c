@@ -9,18 +9,20 @@ typedef struct cellT{
 
 struct queueCDT{
     cellT *front, *rear;
+    size_t SIZE;
 };
 
 queueADT EmptyQueue(){
     queueADT queue;
-    queue = malloc(sizeof(*queue));
+    queue = (queueADT)malloc(sizeof(*queue));
     queue->front = NULL;
+    queue->SIZE = 0;
     return (queue);
 }
 
 void Enqueue(queueADT queue, queueElementT element){
     cellT *cp;
-    cp = malloc(sizeof(cellT));
+    cp = (cellT*)malloc(sizeof(cellT));
     cp->value = element; 
     cp->next = NULL;
     if(queue->front==NULL){
@@ -29,6 +31,7 @@ void Enqueue(queueADT queue, queueElementT element){
         queue->rear->next = cp;
     }
     queue->rear = cp;
+    queue->SIZE++;
 }
 
 queueElementT Dequeue(queueADT queue){
@@ -38,17 +41,32 @@ queueElementT Dequeue(queueADT queue){
         exit(EXIT_FAILURE);
     }
     result = queue->front->value;
+    cellT *to_be_free = queue->front;
     queue->front = queue->front->next;
+    queue->SIZE--;
+    free(to_be_free);
     return result;
 }
 
 int QueueLength(queueADT queue){
-    int n = 0;
-    cellT *cp;
-    for(cp = queue->front; cp!=NULL; cp=cp->next)n++;
-    return n;
+    return queue->SIZE;
 }
 
 int QueueIsEmpty(queueADT queue){
-    return (queue->front == NULL);
+    return (queue->SIZE == 0);
 }
+
+
+
+// #include <stdio.h>
+// int main(){
+//     queueADT queue = EmptyQueue();
+//     for(int i = 0; i < 10; i++) Enqueue(queue, i);
+
+//     while(!QueueIsEmpty(queue)){
+//         int u = Dequeue(queue);
+//         printf("%d %d\n", u, QueueLength(queue));
+//     }
+
+//     free(queue);
+// };
