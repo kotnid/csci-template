@@ -1,9 +1,5 @@
-#include <stdlib.h>
-
 typedef struct stackCDT *stackADT;
-
-typedef int stackElementT;
-
+typedef char stackElementT;
 stackADT EmptyStack(void);
 void Push(stackADT stack, stackElementT element);
 stackElementT Pop(stackADT stack);

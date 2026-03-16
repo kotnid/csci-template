@@ -1,15 +1,4 @@
-# csci2100 template 
-- queue
-
-## missing template
-- stack
-- hash table
-
-## message from Zyndesu
-hi!
-
-## message from tomorin
-gugu gaga
-
-## message from idk
-tkt
+# CSCI2100 Learning Resources
+This learning resources includes:
+- Abstract Data Type Implementation
+- Notes
