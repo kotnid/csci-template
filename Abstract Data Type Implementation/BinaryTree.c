@@ -2,18 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct BinaryTreeCDT {
-    TreeNodeADT rt;
-    BinaryTreeADT lst, rst;
-};
-struct TreeNodeCDT {
-    char* key;
-    int nodeData;
-};
-
 BinaryTreeADT EmptyBinaryTree() {
     return NULL;
 }
+
 BinaryTreeADT NonemptyBinaryTree(TreeNodeADT N,
                                  BinaryTreeADT L, BinaryTreeADT R) {
     BinaryTreeADT t = malloc(sizeof(*t));
@@ -64,6 +56,22 @@ int GetNodeData(TreeNodeADT N) {
 TreeNodeADT SpecialErrNode() {
     return NULL;
 }
+
 bool IsSpecialErrNode(TreeNodeADT N) {
     return N == NULL;
+}
+
+BinaryTreeADT InsertNode(BinaryTreeADT t, TreeNodeADT n) {
+    if (TreeIsEmpty(t))
+        return NonemptyBinaryTree(n,
+                                  EmptyBinaryTree(), EmptyBinaryTree());
+    else {
+        int sign = strcmp(GetNodeKey(n), GetNodeKey(Root(t)));
+        if (sign == 0) return NonemptyBinaryTree(n,
+                                                 LeftSubtree(t), RightSubtree(t));
+        if (sign < 0) return NonemptyBinaryTree(Root(t),
+                                                InsertNode(LeftSubtree(t), n), RightSubtree(t));
+        return NonemptyBinaryTree(Root(t),
+                                  LeftSubtree(t), InsertNode(RightSubtree(t), n));
+    }
 }
