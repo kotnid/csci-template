@@ -11,3 +11,13 @@ TreeNodeADT AVLRoot(AVLTreeADT);
 TreeNodeADT NewTreeNode(char*, int); 
 char* GetNodeKey(TreeNodeADT); 
 int GetNodeData(TreeNodeADT); 
+AVLTreeADT AVLInsertNode(TreeNodeADT X, AVLTreeADT T);
+
+struct AVLTreeCDT {
+    TreeNodeADT rt;
+    AVLTreeADT lst, rst;
+};
+struct TreeNodeCDT {
+    char* key;
+    int nodeData;
+};

@@ -2,24 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct AVLTreeCDT {
-    TreeNodeADT rt;
-    AVLTreeADT lst, rst;
-};
-struct TreeNodeCDT {
-    char* key;
-    int nodeData;
-};
-
 AVLTreeADT EmptyAVLTree() {
     return NULL;
 }
 AVLTreeADT NonemptyAVLTree(TreeNodeADT N,
-                                 AVLTreeADT L, AVLTreeADT R) {
+                           AVLTreeADT L, AVLTreeADT R) {
+    // printf("DEBUG: Executing NonemptyAVLTree\n");
     AVLTreeADT t = malloc(sizeof(*t));
     t->rt = N;
     t->lst = L;
     t->rst = R;
+    // printf("DEBUG: t = %p\n", t);
     return t;
 }
 
@@ -42,6 +35,11 @@ int AVLTreeIsEmpty(AVLTreeADT t) {
     return t == NULL;
 }
 
+int AVLTreeHeight(AVLTreeADT t) {
+    if(t == NULL) return -1;
+    return AVLTreeHeight(t->lst) > AVLTreeHeight(t->rst)? AVLTreeHeight(t->lst)+1: AVLTreeHeight(t->rst)+1;
+}
+
 TreeNodeADT NewTreeNode(char* k, int d) {
     TreeNodeADT N = malloc(sizeof(*N));
     N->key = malloc(sizeof(char) * (strlen(k) + 1));
@@ -51,7 +49,7 @@ TreeNodeADT NewTreeNode(char* k, int d) {
 }
 
 int IsSpecialErrNode(TreeNodeADT N) {
-return N == NULL;
+    return N == NULL;
 }
 
 char* GetNodeKey(TreeNodeADT N) {
@@ -75,8 +73,10 @@ AVLTreeADT LeftRotate(AVLTreeADT t) {
         NonemptyAVLTree(
             AVLRoot(t),
             LeftAVLSubtree(t),
-            LeftAVLSubtree(RightAVLSubtree(t))),
-        RightAVLSubtree(RightAVLSubtree(t)));
+            LeftAVLSubtree(RightAVLSubtree(t))
+        ),
+        RightAVLSubtree(RightAVLSubtree(t))
+    );
 }
 
 AVLTreeADT RightRotate(AVLTreeADT t) {
@@ -86,7 +86,9 @@ AVLTreeADT RightRotate(AVLTreeADT t) {
         NonemptyAVLTree(
             AVLRoot(t),
             RightAVLSubtree(LeftAVLSubtree(t)),
-            RightAVLSubtree(t)));
+            RightAVLSubtree(t)
+        )
+    );
 }
 
 AVLTreeADT LeftRightRotate(AVLTreeADT t) {
@@ -94,7 +96,9 @@ AVLTreeADT LeftRightRotate(AVLTreeADT t) {
         NonemptyAVLTree(
             AVLRoot(t),
             LeftRotate(LeftAVLSubtree(t)),
-            RightAVLSubtree(t)));
+            RightAVLSubtree(t)
+        )
+    );
 }
 
 AVLTreeADT RightLeftRotate(AVLTreeADT t) {
@@ -102,10 +106,13 @@ AVLTreeADT RightLeftRotate(AVLTreeADT t) {
         NonemptyAVLTree(
             AVLRoot(t),
             LeftAVLSubtree(t),
-            RightRotate(RightAVLSubtree(t))));
+            RightRotate(RightAVLSubtree(t))
+        )
+    );
 }
 
 AVLTreeADT AVLInsertNode(TreeNodeADT X, AVLTreeADT T) {
+    // printf("DEBUG: Executing AVLInsertNode\n");
     if (AVLTreeIsEmpty(T))
         return NonemptyAVLTree(X, EmptyAVLTree(), EmptyAVLTree());
     int sign = strcmp(GetNodeKey(X), GetNodeKey(AVLRoot(T)));
