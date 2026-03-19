@@ -82,4 +82,5 @@ int Eval(ExprTreeADT t) {
             }
         }
     }
+    exit(EXIT_FAILURE);
 }
