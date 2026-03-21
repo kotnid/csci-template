@@ -46,6 +46,7 @@ typedef enum {
     DELETE,
     CLEAR,
     TRAVERSAL,
+    INSERT_MANY,
     COMMAND_NUMBER,
     UNKNOWN_COMMAND = 999
 } Command;
@@ -59,13 +60,15 @@ typedef enum {
 } subcommand;
 
 Command hashCommand(char* command) {
-    assert(COMMAND_NUMBER == 7);
+    assert(COMMAND_NUMBER == 8);
     if (strcmp(command, "quit") == 0 || strcmp(command, "q") == 0)
         return QUIT;
     else if (strcmp(command, "help") == 0 || strcmp(command, "h") == 0)
         return HELP;
     else if (strcmp(command, "insert") == 0 || strcmp(command, "i") == 0)
         return INSERT;
+    else if (strcmp(command, "insert_many") == 0 || strcmp(command, "im") == 0)
+        return INSERT_MANY;
     else if (strcmp(command, "print") == 0 || strcmp(command, "p") == 0)
         return PRINT;
     else if (strcmp(command, "delete") == 0 || strcmp(command, "d") == 0)
@@ -89,11 +92,12 @@ subcommand hashSubcommand(char* subcommand) {
 }
 
 void help() {
-    assert(COMMAND_NUMBER == 7);
+    assert(COMMAND_NUMBER == 8);
     printf("[INFO] Command list:\n");
     printf("[h]elp: Display command list\n");
     printf("[q]uit: Exit the simulator\n");
-    printf("[i]nsert <value:int>: Insert a TreeNode(value)\n");
+    printf("[i]nsert <value:int>: Insert a TreeNode with value\n");
+    printf("[i]nsert_[m]any <count:int> (<value:int> ...): Insert a number of different TreeNodes with values\n");
     printf("[p]rint: Print the whole tree\n");
     printf("[d]elete <value:int>: Delete the TreeNode(value)\n");
     printf("[c]lear: Clear the tree, i.e. set the root to null\n");
@@ -121,10 +125,61 @@ void postOrderTraversal(AVLTreeADT t) {
     printf("%d ", GetNodeValue(t->rt));
 }
 
+void runInsert(AVLTreeADT tree) {
+    char* subcommand = strtok(NULL, " \n");
+    if (!subcommand) {
+        printf("[ERROR] Insufficient argument.\n");
+        printf("Format: [i]nsert <value:int>\n");
+        return;
+    }
+    int val;
+    if (!sscanf(subcommand, "%d", &val)) {
+        printf("[ERROR] Invalid argument.\n");
+        printf("Format: [i]nsert <value:int>\n");
+        return;
+    }
+    tree = AVLInsertNode(NewTreeNode(val), tree);
+    printf("[INFO] TreeNode(%d) inserted.\n", val);
+}
+
+void runInsertMany(AVLTreeADT tree) {
+    char* subcommand = strtok(NULL, " \n");
+    if (!subcommand) {
+        printf("[ERROR] Insufficient argument.\n");
+        printf("Format: [i]nsert_[m]any (<value:int> ...)\n");
+        return;
+    }
+
+    int count;
+    if (!sscanf(subcommand, "%d", &count)) {
+        printf("[ERROR] Invalid argument.\n");
+        printf("Format: [i]nsert_[m]any (<value:int> ...)\n");
+        return;
+    }
+    if (count > 100) {
+        printf("[ERROR] Count is too large.\n");
+        printf("Input a number less than 100.\n");
+    }
+    int arr[100] = {0}, index = 0;
+    while ((subcommand = strtok(NULL, " \n"))) {
+        sscanf(subcommand, "%d", &arr[index]);
+        index++;
+    }
+    if (index < count) {
+        printf("[ERROR] Insufficient argument.\n");
+        printf("Format: [i]nsert_[m]any (<value:int> ...)\n");
+    } else {
+        for (int i = 0; i < count; i++) {
+            tree = AVLInsertNode(NewTreeNode(arr[i]), tree);
+        }
+        printf("[INFO] %d TreeNode inserted.\n", count);
+    }
+}
+
 int main() {
     printf("[INFO] AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
-    printf("Version: 1.1.0\n");
+    printf("Version: 1.2.0\n");
     printf("\n");
     char line[100];
     AVLTreeADT tree = EmptyAVLTree();
@@ -134,7 +189,7 @@ int main() {
         char* command = strtok(line, " \n");
         // printf("[DEBUG] command = |%s|\n", command);
 
-        assert(COMMAND_NUMBER == 7);
+        assert(COMMAND_NUMBER == 8);
         switch (hashCommand(command)) {
             case QUIT:
                 printf("[INFO] Exit.\n");
@@ -143,18 +198,12 @@ int main() {
             case HELP:
                 help();
                 break;
-            case INSERT: {
-                int val = 0;
-                char* subcommand = strtok(NULL, " \n");
-                if (!subcommand) {
-                    printf("[ERROR] Insufficient argument.\n");
-                    printf("Format: [i]nsert <value:int>\n");
-                } else {
-                    sscanf(subcommand, "%d", &val);
-                    tree = AVLInsertNode(NewTreeNode(val), tree);
-                    printf("[INFO] TreeNode(%d) inserted.\n", val);
-                }
-            } break;
+            case INSERT:
+                runInsert(tree);
+                break;
+            case INSERT_MANY:
+                runInsertMany(tree);
+                break;
             case PRINT:
                 printf("[INFO] Printing AVLTree:\n");
                 if (tree == NULL)
@@ -192,7 +241,7 @@ int main() {
                             postOrderTraversal(tree);
                             break;
                         default:
-                            printf("[ERROR] Incorrect argument.\n");
+                            printf("[ERROR] Invalid argument.\n");
                             printf("Format: [t]raversal <type:[in]-order | [pre]-order | [post]-order>\n");
                             break;
                     }
