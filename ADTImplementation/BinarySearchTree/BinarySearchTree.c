@@ -75,3 +75,22 @@ BinaryTreeADT InsertNode(BinaryTreeADT t, TreeNodeADT n) {
                                   LeftSubtree(t), InsertNode(RightSubtree(t), n));
     }
 }
+
+BinaryTreeADT DeleteNode(BinaryTreeADT t, char* k) {
+    if (TreeIsEmpty(t)) exit(EXIT_FAILURE);
+    int sign = strcmp(k, GetNodeKey(Root(t)));
+    /* Case 1 */
+    if (sign < 0) return NonemptyBinaryTree(Root(t),
+                                            DeleteNode(LeftSubtree(t), k), RightSubtree(t));
+    if (sign > 0) return NonemptyBinaryTree(Root(t),
+                                            LeftSubtree(t),
+                                            /* Case 2c */
+                                            DeleteNode(RightSubtree(t), k));
+    if (!TreeIsEmpty(LeftSubtree(t)) && !TreeIsEmpty(RightSubtree(t))) {
+        TreeNodeADT M = FindMinNode(RightSubtree(t));
+        return NonemptyBinaryTree(M, LeftSubtree(t),
+                                  DeleteNode(RightSubtree(t), GetNodeKey(M)));
+    };
+    /* Cases 2a and 2b */
+    return TreeIsEmpty(RightSubtree(t)) ? LeftSubtree(t) : RightSubtree(t);
+}

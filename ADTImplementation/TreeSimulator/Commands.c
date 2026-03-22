@@ -348,6 +348,49 @@ void runPrintTree(TreePtr trees[]) {
     }
 }
 
+void runDelete(TreePtr trees[]) {
+    char* subcommand1 = strtok(NULL, " \n");
+    char* subcommand2 = strtok(NULL, " \n");
+    if (!subcommand1 || !subcommand2) {
+        printf("[ERROR] Insufficient argument.\n");
+        printCommandFormat(INSERT);
+        return;
+    }
+    int index, val;
+    if (!sscanf(subcommand1, "%d", &index) || !sscanf(subcommand2, "%d", &val)) {
+        printf("[ERROR] Invalid argument.\n");
+        printCommandFormat(INSERT);
+    }
+    if (index >= MAX_TREE_NUMBER) {
+        printf("[ERROR] Index is too large.\n");
+        printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
+        return;
+    }
+    if (trees[index] == NULL) {
+        printf("[ERROR] Inserting to uninitialized tree.\n");
+        printf("Run new command first.\n");
+        return;
+    }
+
+    assert(TREE_TYPE_NUMBER == 2);
+    switch (trees[index]->type) {
+        case AVL:
+            todo("AVL delete function");
+            break;
+        case BST:
+            if(!IsNodeExist(trees[index]->root, val)) {
+                printf("[ERROR] Deleting non-existent node.\n");
+                return;
+            }
+            trees[index]->root = DeleteNode(trees[index]->root, val);
+            printf("[INFO] TreeNode(%d) deleted in Tree(%d).\n", val, index);
+            break;
+        default:
+            assert(false && "[ERROR] UNREACHABLE\n");
+            break;
+    }
+}
+
 void runNew(TreePtr trees[]) {
     char* subcommand1 = strtok(NULL, " \n");
     char* subcommand2 = strtok(NULL, " \n");

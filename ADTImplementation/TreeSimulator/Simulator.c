@@ -10,7 +10,7 @@
 int main() {
     printf("AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
-    printf("Version: 2.0.0\n");
+    printf("Version: 2.1.1\n");
     printf("\n");
 
     TreePtr trees[MAX_TREE_NUMBER];
@@ -40,8 +40,7 @@ int main() {
                 runPrintTree(trees);
                 break;
             case DELETE:
-                printf("[WARNING] Delete function has not be implemented.\n");
-                printf("Pull requests are welcomed!");
+                runDelete(trees);
                 break;
             case TRAVERSAL:
                 runTraversal(trees);

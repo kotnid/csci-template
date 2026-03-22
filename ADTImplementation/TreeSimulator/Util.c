@@ -79,6 +79,9 @@ char* commandFormat(Command command) {
         case PRINT:
             return "[p]rint <index:int>";
             break;
+        case DELETE:
+            return "[d]elete <index:int> <value:int>";
+            break;
         case TRAVERSAL:
             return "[t]raversal <index:int> <type:[in]-order | [pre]-order | [post]-order>";
             break;
@@ -93,4 +96,9 @@ void printCommandFormat(Command command) {
     printf("Format: ");
     printf("%s", commandFormat(command));
     printf("\n");
+}
+
+void todo(char* fn) {
+    printf("[WARNING] %s has not be implemented.\n", fn);
+    printf("Pull requests are welcomed!");
 }

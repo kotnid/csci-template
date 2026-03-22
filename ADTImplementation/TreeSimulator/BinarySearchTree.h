@@ -11,7 +11,10 @@ BinaryTreeADT LeftSubtree(BinaryTreeADT);
 BinaryTreeADT RightSubtree(BinaryTreeADT);
 bool TreeIsEmpty(BinaryTreeADT);
 TreeNodeADT Root(BinaryTreeADT);
-BinaryTreeADT InsertNode(BinaryTreeADT t, TreeNodeADT n);
+BinaryTreeADT InsertNode(BinaryTreeADT, TreeNodeADT);
+BinaryTreeADT DeleteNode(BinaryTreeADT, int);
+
+bool IsNodeExist(BinaryTreeADT, int);
 
 struct BinaryTreeCDT {
     TreeNodeADT rt;

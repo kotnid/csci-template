@@ -5,6 +5,10 @@ Aim to visualize tree-kind data structures.
 1. Run `./sim.sh`.
 
 ## History
+## v2.1.1
+Command updated:
+- DELETE
+
 ### v2.1.0
 New tree supported:
 - Binary Search Tree

@@ -14,6 +14,7 @@ TreeNodeADT SpecialErrNode(void);
 bool IsSpecialErrNode(TreeNodeADT);
 char* GetNodeKey(TreeNodeADT);
 BinaryTreeADT InsertNode(BinaryTreeADT t, TreeNodeADT n);
+BinaryTreeADT DeleteNode(BinaryTreeADT t, char* k);
 
 struct BinaryTreeCDT {
     TreeNodeADT rt;
