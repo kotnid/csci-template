@@ -40,25 +40,6 @@ int AVLTreeHeight(AVLTreeADT t) {
     return AVLTreeHeight(t->lst) > AVLTreeHeight(t->rst)? AVLTreeHeight(t->lst)+1: AVLTreeHeight(t->rst)+1;
 }
 
-TreeNodeADT NewTreeNode(int d) {
-    TreeNodeADT N = malloc(sizeof(*N));
-    N->value = d;
-    return N;
-}
-
-int IsSpecialErrNode(TreeNodeADT N) {
-    return N == NULL;
-}
-
-int GetNodeValue(TreeNodeADT N) {
-    if (IsSpecialErrNode(N)) exit(EXIT_FAILURE);
-    return N->value;
-}
-
-TreeNodeADT SpecialErrNode() {
-    return NULL;
-}
-
 AVLTreeADT LeftRotate(AVLTreeADT t) {
     return NonemptyAVLTree(
         AVLRoot(RightAVLSubtree(t)),

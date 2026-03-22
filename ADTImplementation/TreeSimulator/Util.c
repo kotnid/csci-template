@@ -5,7 +5,7 @@
 #include <string.h>
 
 Command hashCommand(char* command) {
-    assert(COMMAND_NUMBER == 10);
+    assert(COMMAND_NUMBER == 9);
     if (strcmp(command, "quit") == 0 || strcmp(command, "q") == 0)
         return QUIT;
     else if (strcmp(command, "help") == 0 || strcmp(command, "h") == 0)
@@ -18,8 +18,6 @@ Command hashCommand(char* command) {
         return PRINT;
     else if (strcmp(command, "delete") == 0 || strcmp(command, "d") == 0)
         return DELETE;
-    else if (strcmp(command, "clear") == 0 || strcmp(command, "c") == 0)
-        return CLEAR;
     else if (strcmp(command, "traversal") == 0 || strcmp(command, "t") == 0)
         return TRAVERSAL;
     else if (strcmp(command, "new") == 0 || strcmp(command, "n") == 0)
@@ -79,8 +77,9 @@ char* commandFormat(Command command) {
             return "[i]nsert_[m]any <index:int> <count:int> (<value:int> ...)";
             break;
         case PRINT:
+            return "[p]rint <index:int>";
             break;
-            case TRAVERSAL:
+        case TRAVERSAL:
             return "[t]raversal <index:int> <type:[in]-order | [pre]-order | [post]-order>";
             break;
         default:

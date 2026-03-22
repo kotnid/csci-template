@@ -7,39 +7,6 @@
 #include "Commands.h"
 #include "Util.h"
 
-/*
-print_tree reference:
-https://stackoverflow.com/questions/64660540/how-can-i-print-a-binary-tree
-*/
-
-// char buffer[1024] = {0};
-
-// static void print_node(AVLTreeADT t) {
-//     printf("%s+-%d\n", buffer, t->rt->value);
-// }
-
-// static void print_subtree(AVLTreeADT t,
-//                           const char* prf_right, /* right prefix */
-//                           const char* prf_left,  /* left prefix */
-//                           char* buf, int buf_sz) /* buffer management, to add prefixes to */
-// {
-//     if (t->rst) { /* right subtree */
-//         /* add the prefix for the right subtree, this is prf_right for
-//          * the right part (the first, before the root node) */
-//         int res = snprintf(buf, buf_sz, "%s", prf_right);
-//         print_subtree(t->rst, "  ", "| ", buf + res, buf_sz - res);
-//         *buf = '\0';
-//     }
-//     print_node(t);
-//     if (t->lst) { /* left subtree */
-//         /* add the prefix for the left subtree, this is prf_left
-//          * for the left part (the second, after the root node) */
-//         int res = snprintf(buf, buf_sz, "%s", prf_left);
-//         print_subtree(t->lst, "| ", "  ", buf + res, buf_sz - res);
-//         *buf = '\0';
-//     }
-// }
-
 int main() {
     printf("AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
@@ -54,7 +21,7 @@ int main() {
         char* command = strtok(line, " \n");
         // printf("[DEBUG] command = |%s|\n", command);
 
-        assert(COMMAND_NUMBER == 10);
+        assert(COMMAND_NUMBER == 9);
         switch (hashCommand(command)) {
             case QUIT:
                 printf("[INFO] Exit.\n");
@@ -70,19 +37,11 @@ int main() {
                 runInsertMany(trees);
                 break;
             case PRINT:
-                // printf("[INFO] Printing AVLTree:\n");
-                // if (tree == NULL)
-                //     printf("(NULL)\n");
-                // else
-                //     print_subtree(tree, "  ", "  ", buffer, sizeof buffer);
+                runPrintTree(trees);
                 break;
             case DELETE:
                 printf("[WARNING] Delete function has not be implemented.\n");
                 printf("Pull requests are welcomed!");
-                break;
-            case CLEAR:
-                // tree = EmptyAVLTree();
-                // printf("[INFO] Tree cleared.\n");
                 break;
             case TRAVERSAL:
                 runTraversal(trees);

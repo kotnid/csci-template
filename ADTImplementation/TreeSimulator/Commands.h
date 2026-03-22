@@ -4,6 +4,7 @@
 void runHelp();
 void runInsert(TreePtr[]);
 void runInsertMany(TreePtr[]);
+void runPrintTree(TreePtr[]);
 void runTraversal(TreePtr[]);
 void runNew(TreePtr[]);
 void runDumpTrees(TreePtr[]);

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "BinaryTree.h"
+#include "BinarySearchTree.h"
 
 void printCurrentNodeADT(BinaryTreeADT t) {
     if (t == NULL) {

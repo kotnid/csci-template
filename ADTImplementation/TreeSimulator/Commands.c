@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "AVLTree.h"
+#include "BinarySearchTree.h"
 #include "Util.h"
 
 void runHelp() {
@@ -17,7 +18,6 @@ void runHelp() {
         printf("[i]nsert_[m]any <count:int> (<value:int> ...): Insert a number of different TreeNodes with values\n");
         printf("[p]rint: Print the whole tree\n");
         printf("[d]elete <value:int>: Delete the TreeNode(value)\n");
-        printf("[c]lear: Clear the tree, i.e. set the root to null\n");
         printf("[t]raversal <type:[in]-order | [pre]-order | [post]-order>: Tree traversal\n");
         printf("[n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree>: Create a new tree.\n");
         printf("[d]ump_[t]rees: Dump trees.");
@@ -63,9 +63,6 @@ void runHelp() {
             printf("[WARNING] The guide of this command has not been written.\n");
             break;
         case DELETE:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        case CLEAR:
             printf("[WARNING] The guide of this command has not been written.\n");
             break;
         case TRAVERSAL:
@@ -193,6 +190,8 @@ void runInsert(TreePtr trees[]) {
             printf("[INFO] TreeNode(%d) inserted in Tree(%d).\n", val, index);
             break;
         case BST:
+            trees[index]->root = InsertNode(trees[index]->root, NewTreeNode(val));
+            printf("[INFO] TreeNode(%d) inserted in Tree(%d).\n", val, index);
             break;
         default:
             assert(false && "[ERROR] UNREACHABLE\n");
@@ -251,9 +250,100 @@ void runInsertMany(TreePtr trees[]) {
             printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
             break;
         case BST:
+            for (int i = 0; i < count; i++) {
+                trees[index]->root = InsertNode(trees[index]->root, NewTreeNode(arr[i]));
+            }
+            printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
             break;
         default:
             assert(false && "[ERROR] UNREACHABLE\n");
+            break;
+    }
+}
+
+char buffer[1024] = {0};
+
+static void AVL_print_node(AVLTreeADT t, FILE* o) {
+    fprintf(o, "%s+-%d\n", buffer, t->rt->value);
+}
+
+static void AVL_print_subtree(AVLTreeADT t,
+                              FILE* o,
+                              const char* prf_right,
+                              const char* prf_left,
+                              char* buf, int buf_sz) {
+    if (t->rst) {
+        int res = snprintf(buf, buf_sz, "%s", prf_right);
+        AVL_print_subtree(t->rst, o, "  ", "| ", buf + res, buf_sz - res);
+        *buf = '\0';
+    }
+    AVL_print_node(t, o);
+    if (t->lst) {
+        int res = snprintf(buf, buf_sz, "%s", prf_left);
+        AVL_print_subtree(t->lst, o, "| ", "  ", buf + res, buf_sz - res);
+        *buf = '\0';
+    }
+}
+
+static void BST_print_node(BinaryTreeADT t, FILE* o) {
+    fprintf(o, "%s+-%d\n", buffer, t->rt->value);
+}
+
+static void BST_print_subtree(BinaryTreeADT t,
+                              FILE* o,
+                              const char* prf_right,
+                              const char* prf_left,
+                              char* buf, int buf_sz) {
+    if (t->rst) {
+        int res = snprintf(buf, buf_sz, "%s", prf_right);
+        BST_print_subtree(t->rst, o, "  ", "| ", buf + res, buf_sz - res);
+        *buf = '\0';
+    }
+    BST_print_node(t, o);
+    if (t->lst) {
+        int res = snprintf(buf, buf_sz, "%s", prf_left);
+        BST_print_subtree(t->lst, o, "| ", "  ", buf + res, buf_sz - res);
+        *buf = '\0';
+    }
+}
+
+void runPrintTree(TreePtr trees[]) {
+    char* subcommand = strtok(NULL, " \n");
+    if (!subcommand) {
+        printf("[ERROR] Insufficient argument.\n");
+        printCommandFormat(INSERT);
+        return;
+    }
+    int index;
+    if (!sscanf(subcommand, "%d", &index)) {
+        printf("[ERROR] Invalid argument.\n");
+        printCommandFormat(INSERT);
+    }
+    if (index >= MAX_TREE_NUMBER) {
+        printf("[ERROR] Index is too large.\n");
+        printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
+        return;
+    }
+    if (trees[index] == NULL) {
+        printf("[ERROR] Printing uninitialized tree.\n");
+        return;
+    }
+
+    printf("[INFO] Printing Tree(%d):\n", index);
+    switch (trees[index]->type) {
+        case AVL:
+            if (trees[index]->root == NULL)
+                printf("(NULL)\n");
+            else
+                AVL_print_subtree(trees[index]->root, stdout, "  ", "  ", buffer, sizeof buffer);
+            break;
+        case BST:
+            if (trees[index]->root == NULL)
+                printf("(NULL)\n");
+            else
+                BST_print_subtree(trees[index]->root, stdout, "  ", "  ", buffer, sizeof buffer);
+            break;
+        default:
             break;
     }
 }
@@ -285,8 +375,10 @@ void runNew(TreePtr trees[]) {
             printf("[INFO] A new AVL Tree labeled as index %d is created.\n", index);
             break;
         case BST:
-            printf("[WARNING] New BST function has not be implemented.\n");
-            printf("Pull requests are welcomed!");
+            trees[index] = (TreePtr)malloc(sizeof(Tree));
+            trees[index]->type = BST;
+            trees[index]->root = EmptyBinaryTree();
+            printf("[INFO] A new binary search tree labeled as index %d is created.\n", index);
             break;
         default:
             printf("[ERROR] Invalid argument.\n");

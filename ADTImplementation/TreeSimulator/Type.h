@@ -6,7 +6,6 @@ typedef enum {
     INSERT,
     PRINT,
     DELETE,
-    CLEAR,
     TRAVERSAL,
     INSERT_MANY,
     NEW,
