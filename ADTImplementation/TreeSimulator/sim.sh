@@ -1,2 +1,2 @@
 #1/bin/bash
-gcc main.c "../AVLTree/AVLTree(intNode).c" -o main -Wall -Wextra && ./main
+gcc Simulator.c Util.c Commands.c AVLTree.c -o main -Wall -Wextra && ./main

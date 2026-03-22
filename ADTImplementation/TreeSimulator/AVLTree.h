@@ -1,3 +1,5 @@
+#ifndef AVL_TREE_H_
+#define AVL_TREE_H_
 #include <stdio.h> 
 typedef struct AVLTreeCDT *AVLTreeADT; 
 typedef struct TreeNodeCDT *TreeNodeADT; 
@@ -19,3 +21,4 @@ struct AVLTreeCDT {
 struct TreeNodeCDT {
     int value;
 };
+#endif
