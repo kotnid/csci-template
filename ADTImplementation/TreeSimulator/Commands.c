@@ -3,9 +3,35 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
-#include "AVLTree.h"
-#include "BinarySearchTree.h"
+#include "ADTs/AVLTree.h"
+#include "ADTs/BinarySearchTree.h"
 #include "Util.h"
+
+/**
+ * @name parseSubcommandWith2Int
+ * This function takes 2 subcommands from terminal, parse them to string and save them to a return array.
+ * Count check and type check are done, but no further checking is done.
+ * Print error message in terminal if failed.
+ * @param {int[2]} returnBuffer The return array
+ * @param {Command} callerName The instruction name of the caller
+ * @return {bool} Success or not
+ */
+
+static bool parseSubcommandTo2Int(int returnBuffer[], Command callerName) {
+    char* subcommand1 = strtok(NULL, " \n");
+    char* subcommand2 = strtok(NULL, " \n");
+    if (!subcommand1 || !subcommand2) {
+        printf("[ERROR] Insufficient argument.\n");
+        printCommandFormat(callerName);
+        return false;
+    }
+    if (!sscanf(subcommand1, "%d", &returnBuffer[0]) || !sscanf(subcommand2, "%d", &returnBuffer[1])) {
+        printf("[ERROR] Invalid argument.\n");
+        printCommandFormat(callerName);
+        return false;
+    }
+    return true;
+}
 
 void runHelp() {
     assert(COMMAND_NUMBER == 10);
@@ -160,18 +186,12 @@ void runTraversal(TreePtr trees[]) {
 }
 
 void runInsert(TreePtr trees[]) {
-    char* subcommand1 = strtok(NULL, " \n");
-    char* subcommand2 = strtok(NULL, " \n");
-    if (!subcommand1 || !subcommand2) {
-        printf("[ERROR] Insufficient argument.\n");
-        printCommandFormat(INSERT);
+    int subcommands[2] = {0};
+    if (!parseSubcommandTo2Int(subcommands, INSERT)) {
         return;
     }
-    int index, val;
-    if (!sscanf(subcommand1, "%d", &index) || !sscanf(subcommand2, "%d", &val)) {
-        printf("[ERROR] Invalid argument.\n");
-        printCommandFormat(INSERT);
-    }
+
+    int index = subcommands[0], val = subcommands[1];
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -200,21 +220,12 @@ void runInsert(TreePtr trees[]) {
 }
 
 void runInsertMany(TreePtr trees[]) {
-    char* subcommand1 = strtok(NULL, " \n");
-    char* subcommand2 = strtok(NULL, " \n");
-    // printf("[DEBUG] subcommand = {%s, %s}\n", subcommand1, subcommand2);
-    if (!subcommand1 || !subcommand2) {
-        printf("[ERROR] Insufficient argument.\n");
-        printCommandFormat(INSERT_MANY);
+    int subcommands[2] = {0};
+    if (!parseSubcommandTo2Int(subcommands, INSERT_MANY)) {
         return;
     }
 
-    int index, count;
-    if (!sscanf(subcommand1, "%d", &index) || !sscanf(subcommand2, "%d", &count)) {
-        printf("[ERROR] Invalid argument.\n");
-        printCommandFormat(INSERT_MANY);
-        return;
-    }
+    int index = subcommands[0], count = subcommands[1];
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -231,8 +242,8 @@ void runInsertMany(TreePtr trees[]) {
         return;
     }
     int arr[100] = {0}, i = 0;
-    while ((subcommand2 = strtok(NULL, " \n"))) {
-        sscanf(subcommand2, "%d", &arr[i]);
+    while ((subcommands[0] = strtok(NULL, " \n"))) {
+        sscanf(subcommands[0], "%d", &arr[i]);
         i++;
     }
     if (i < count) {
@@ -349,18 +360,12 @@ void runPrintTree(TreePtr trees[]) {
 }
 
 void runDelete(TreePtr trees[]) {
-    char* subcommand1 = strtok(NULL, " \n");
-    char* subcommand2 = strtok(NULL, " \n");
-    if (!subcommand1 || !subcommand2) {
-        printf("[ERROR] Insufficient argument.\n");
-        printCommandFormat(INSERT);
+    int subcommands[2] = {0};
+    if (!parseSubcommandTo2Int(subcommands, DELETE)) {
         return;
     }
-    int index, val;
-    if (!sscanf(subcommand1, "%d", &index) || !sscanf(subcommand2, "%d", &val)) {
-        printf("[ERROR] Invalid argument.\n");
-        printCommandFormat(INSERT);
-    }
+
+    int index = subcommands[0], val = subcommands[1];
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -378,7 +383,7 @@ void runDelete(TreePtr trees[]) {
             todo("AVL delete function");
             break;
         case BST:
-            if(!IsNodeExist(trees[index]->root, val)) {
+            if (!IsNodeExist(trees[index]->root, val)) {
                 printf("[ERROR] Deleting non-existent node.\n");
                 return;
             }
