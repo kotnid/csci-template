@@ -92,11 +92,57 @@ char* commandFormat(Command command) {
     return "";
 }
 
+/**
+ * @name printCommandFormat
+ * Print the corresponding command format to the terminal.
+ * @param {Command} command The command name
+ */
 void printCommandFormat(Command command) {
-    printf("Format: ");
-    printf("%s", commandFormat(command));
-    printf("\n");
+    assert(COMMAND_NUMBER == 10 && "HAVE NOT EXHAUST ALL COMMAND");
+    switch (command) {
+        case QUIT:
+            printf("[q]uit\n");
+            break;
+        case HELP:
+            printf("[h]elp (<command:str>)\n");
+            break;
+        case INSERT:
+            printf("[i]nsert <index:int> <value:int>\n");
+            break;
+        case INSERT_MANY:
+            printf("[i]nsert_[m]any <index:int> <count:int> (<value:int> ...)\n");
+            break;
+        case PRINT:
+            printf("[p]rint <index:int>\n");
+            break;
+        case DELETE:
+            printf("[d]elete <index:int> <value:int>\n");
+            break;
+        case TRAVERSAL:
+            printf("[t]raversal <index:int> <type:str>\n");
+            break;
+        case NEW:
+            printf("[n]ew <index:int> <tree_type:str>\n");
+            break;
+        case DUMP_TREES:
+            printf("[d]ump_[t]rees\n");
+            break;
+        case SEARCH:
+            printf("[s]earch <index:int> <value:int>\n");
+            break;
+        default:
+            assert(false && "UNREACHABLE");
+            break;
+    }
 }
+
+/**
+ * @name todo
+ * Place holder for function to be implemented.
+ * Print warning message in terminal.
+ * The program is NOT halt.
+ * @param {char*} fn The name of the function to be implemented
+ */
 
 void todo(char* fn) {
     printf("[WARNING] %s has not be implemented.\n", fn);
@@ -106,10 +152,10 @@ void todo(char* fn) {
 /**
  * @name readAndParseSubcommandToInt
  * This function takes 1 subcommands from terminal, parse them to string and save them to a return array.
- * Count check and type check are done, but no further checking is done.
+ * Existence check and type check are made, but no further checking is done.
  * Print error message in terminal if failed.
  * @param {int*} ret The address of parsed interger
- * @param {Command} caller The instruction name of the caller
+ * @param {Command} caller The command name of the caller
  * @return {bool} Success or not
  */
 

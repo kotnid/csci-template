@@ -11,7 +11,8 @@ AVLTreeADT RightAVLSubtree(AVLTreeADT);
 int AVLTreeIsEmpty(AVLTreeADT); 
 int AVLTreeHeight(AVLTreeADT); 
 TreeNodeADT AVLRoot(AVLTreeADT); 
-AVLTreeADT AVLInsertNode(TreeNodeADT X, AVLTreeADT T);
+AVLTreeADT AVLInsertNode(TreeNodeADT, AVLTreeADT);
+bool AVL_IsNodeExist(AVLTreeADT, int);
 
 struct AVLTreeCDT {
     TreeNodeADT rt;

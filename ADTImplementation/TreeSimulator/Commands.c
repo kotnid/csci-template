@@ -9,73 +9,29 @@
 #include "Util.h"
 
 void runHelp() {
-    assert(COMMAND_NUMBER == 10);
     char* subcommand = strtok(NULL, " \n");
     if (!subcommand) {
-        printf("[INFO] Command list:\n");
-        printf("[h]elp (<command:str>): This command\n");
-        printf("%s", strcat(commandFormat(QUIT), ": Exit the simulator\n"));
-        printf("%s", strcat(commandFormat(INSERT), ": Insert a TreeNode with value\n"));
-        printf("[i]nsert_[m]any <count:int> (<value:int> ...): Insert a number of different TreeNodes with values\n");
-        printf("[p]rint: Print the whole tree\n");
-        printf("[d]elete <value:int>: Delete the TreeNode(value)\n");
-        printf("[t]raversal <type:[in]-order | [pre]-order | [post]-order>: Tree traversal\n");
-        printf("[n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree>: Create a new tree.\n");
-        printf("[d]ump_[t]rees: Dump trees.");
-
+        printf("[INFO] This simulator aims to visualize tree-kind data structures.:\n");
+        printf("Format list:\n");
+        for(int i=0; i<COMMAND_NUMBER; i++) {
+            printf("%2d. ", i+1);
+            printCommandFormat((Command)i);
+        }
         return;
     }
-    switch (hashCommand(subcommand)) {
-        case QUIT:
-            printf("[Info] Manul for quit:\n");
-            printf("\n");
-            printf("FORMAT\n");
-            printf("[q]uit\n");
-            printf("\n");
-            printf("DESCRIPTION\n");
-            printf("Exit the simulator\n");
-            break;
-        case HELP:
-            printf("[Info] Manul for help:\n");
-            printf("\n");
-            printf("FORMAT\n");
-            printf("[h]elp (command:str)\n");
-            printf("\n");
-            printf("DESCRIPTION\n");
-            printf("If help command is used without argument, the full command list will be displayed.\n");
-            printf("If help command is used with argument <command>, the manul of that command will be displayed.\n");
-            printf("\n");
-            printf("MANUL CONVENTION\n");
-            printf("The format of a command is like this: [c]ommand_name <argument:type> (<optional argument:type> ...)\n");
-            printf("1.  The branket[] in command_name denotes the short form of the command.\n");
-            printf("    Either full command or short form is accepted in the simulator\n");
-            printf("2.  The symbol <argument:type> denotes the argument and the \"type\" denotes the argument type.\n");
-            printf("    The type is usually \"int\" or \"str\".\n");
-            printf("3.  The argument falls inside branket() is optional.\n");
-            printf("4.  ... denotes variable amount of arguments.\n");
-            break;
-        case INSERT:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        case INSERT_MANY:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        case PRINT:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        case DELETE:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        case TRAVERSAL:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        case NEW:
-            printf("[WARNING] The guide of this command has not been written.\n");
-            break;
-        default:
-            printf("[ERROR] Unknow command.\n");
-            break;
+
+    char filePath[] = "Manuls/";
+    strcat(filePath, subcommand);
+    FILE* manul = fopen(filePath, "r");
+    if(!manul) {
+        printf("[ERROR] Manul not found.\n");
+        return;
     }
+    char buffer[1000];
+    while(fgets(buffer, 1000, manul)) {
+        printf("%s", buffer);
+    }
+    fclose(manul);
 }
 
 static void AVLInOrderTraversal(AVLTreeADT t) {
@@ -123,8 +79,13 @@ void runTraversal(TreePtr trees[]) {
                     AVLInOrderTraversal(trees[index]->root);
                     break;
                 case BST:
+                    todo("BST traversal");
+                    break;
+                case SPL:
+                    todo("SPL traversal");
                     break;
                 default:
+                    assert(false && "UNREACHABLE");
                     break;
             }
             break;
@@ -135,8 +96,13 @@ void runTraversal(TreePtr trees[]) {
                     AVLPreOrderTraversal(trees[index]->root);
                     break;
                 case BST:
+                    todo("BST traversal");
+                    break;
+                case SPL:
+                    todo("SPL traversal");
                     break;
                 default:
+                    assert(false && "UNREACHABLE");
                     break;
             }
             break;
@@ -147,8 +113,13 @@ void runTraversal(TreePtr trees[]) {
                     AVLPostOrderTraversal(trees[index]->root);
                     break;
                 case BST:
+                    todo("BST traversal");
+                    break;
+                case SPL:
+                    todo("SPL traversal");
                     break;
                 default:
+                    assert(false && "UNREACHABLE");
                     break;
             }
             break;
@@ -230,24 +201,28 @@ void runInsertMany(TreePtr trees[]) {
         return;
     }
 
-    assert(TREE_TYPE_NUMBER == 2);
+    assert(TREE_TYPE_NUMBER == 3);
     switch (trees[index]->type) {
         case AVL:
             for (int i = 0; i < count; i++) {
                 trees[index]->root = AVLInsertNode(NewTreeNode(arr[i]), trees[index]->root);
             }
-            printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
             break;
         case BST:
             for (int i = 0; i < count; i++) {
                 trees[index]->root = InsertNode(trees[index]->root, NewTreeNode(arr[i]));
             }
-            printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
             break;
-        default:
+        case SPL:
+            for (int i = 0; i < count; i++) {
+                trees[index]->root = Splay_Insert(trees[index]->root, arr[i]);
+            }
+            break;
+            default:
             assert(false && "[ERROR] UNREACHABLE\n");
             break;
-    }
+        }
+        printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
 }
 
 char buffer[1024] = {0};
@@ -319,17 +294,8 @@ static void SPL_print_subtree(SplayTreeADT t,
 }
 
 void runPrintTree(TreePtr trees[]) {
-    char* subcommand = strtok(NULL, " \n");
-    if (!subcommand) {
-        printf("[ERROR] Insufficient argument.\n");
-        printCommandFormat(INSERT);
-        return;
-    }
     int index;
-    if (!sscanf(subcommand, "%d", &index)) {
-        printf("[ERROR] Invalid argument.\n");
-        printCommandFormat(INSERT);
-    }
+    if (!readAndParseSubcommandToInt(&index, PRINT)) return;
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -341,7 +307,7 @@ void runPrintTree(TreePtr trees[]) {
     }
 
     printf("[INFO] Printing Tree(%d):\n", index);
-    assert(TREE_TYPE_NUMBER == 3);
+    assert(TREE_TYPE_NUMBER == 3 && "HAVE NOT EXHAUST ALL TREE TYPES");
     switch (trees[index]->type) {
         case AVL:
             if (trees[index]->root == NULL)
@@ -368,9 +334,7 @@ void runPrintTree(TreePtr trees[]) {
 
 void runDelete(TreePtr trees[]) {
     int index, val;
-    if (!readAndParseSubcommandToInt(&index, DELETE) || !readAndParseSubcommandToInt(&val, DELETE)) {
-        return;
-    }
+    if (!readAndParseSubcommandToInt(&index, DELETE) || !readAndParseSubcommandToInt(&val, DELETE)) return;
 
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
@@ -378,12 +342,12 @@ void runDelete(TreePtr trees[]) {
         return;
     }
     if (trees[index] == NULL) {
-        printf("[ERROR] Inserting to uninitialized tree.\n");
+        printf("[ERROR] Deleteing node from uninitialized tree.\n");
         printf("Run new command first.\n");
         return;
     }
 
-    assert(TREE_TYPE_NUMBER == 2);
+    assert(TREE_TYPE_NUMBER == 3 && "HAVE NOT EXHAUST ALL TREE TYPES");
     switch (trees[index]->type) {
         case AVL:
             todo("AVL delete function");
@@ -396,6 +360,9 @@ void runDelete(TreePtr trees[]) {
             trees[index]->root = DeleteNode(trees[index]->root, val);
             printf("[INFO] TreeNode(%d) deleted in Tree(%d).\n", val, index);
             break;
+        case SPL:
+            todo("AVL delete function");
+            break;
         default:
             assert(false && "[ERROR] UNREACHABLE\n");
             break;
@@ -404,7 +371,7 @@ void runDelete(TreePtr trees[]) {
 
 void runNew(TreePtr trees[]) {
     int index;
-    if(!readAndParseSubcommandToInt(&index, NEW)) return;
+    if (!readAndParseSubcommandToInt(&index, NEW)) return;
     char* subcommand2 = strtok(NULL, " \n");
     if (!subcommand2) {
         printf("[ERROR] Insufficient argument.\n");
@@ -435,7 +402,7 @@ void runNew(TreePtr trees[]) {
             break;
         default:
             printf("[ERROR] Invalid argument.\n");
-            printf("Format: [n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree> | [spl]ay_tree\n");
+            printCommandFormat(NEW);
             return;
     }
     printf("[INFO] A new %s labeled as index %d is created.\n", reverseHashTreeType(hashTreeType(subcommand2)), index);
@@ -454,13 +421,24 @@ void runDumpTrees(TreePtr trees[]) {
 void runSearch(TreePtr trees[]) {
     int index, val;
     if (!readAndParseSubcommandToInt(&index, SEARCH) || !readAndParseSubcommandToInt(&val, SEARCH)) return;
+    if (index >= MAX_TREE_NUMBER) {
+        printf("[ERROR] Index is too large.\n");
+        printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
+        return;
+    }
+    if (trees[index] == NULL) {
+        printf("[ERROR] Searching node from uninitialized tree.\n");
+        printf("Run new command first.\n");
+        return;
+    }
+    
     bool found;
     switch (trees[index]->type) {
         case BST:
             found = IsNodeExist(trees[index]->root, val);
             break;
         case AVL:
-            printf("[WARNING] Not implemented\n");
+            found = AVL_IsNodeExist(trees[index]->root, val);
             break;
         case SPL:
             trees[index]->root = Splay_Find(trees[index]->root, val, &found);
@@ -470,7 +448,7 @@ void runSearch(TreePtr trees[]) {
             break;
     }
     if (found)
-        printf("[INFO] Node(%d) exist in Tree(%d)\n", val, index);
+        printf("[INFO] Node(%d) exists in Tree(%d)\n", val, index);
     else
         printf("[INFO] Node(%d) does not exist in Tree(%d)\n", val, index);
 }

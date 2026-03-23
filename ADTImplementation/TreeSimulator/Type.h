@@ -4,10 +4,10 @@ typedef enum {
     QUIT = 0,
     HELP,
     INSERT,
+    INSERT_MANY,
     PRINT,
     DELETE,
     TRAVERSAL,
-    INSERT_MANY,
     NEW,
     DUMP_TREES,
     SEARCH,
@@ -29,7 +29,7 @@ typedef enum {
     SPL,
     TREE_TYPE_NUMBER,
     UNKNOWN_TREE_TYPE = 999
-}TreeType;
+} TreeType;
 
 typedef struct {
     TreeType type;
@@ -39,4 +39,4 @@ typedef struct {
 typedef Tree* TreePtr;
 
 #define MAX_TREE_NUMBER 10
-#endif // TYPE_H_
+#endif  // TYPE_H_

@@ -1,19 +1,32 @@
 # Tree Simulator
-Aim to visualize tree-kind data structures.
+Aims to visualize tree-kind data structures.
 
 ## How to Run?
 1. Run `./sim.sh`.
 
 ## History
+### v3.2.0
+A code review on `Commands.c` is done.
+
+Modified Commands:
+- HELP
+- SEARCH
+
+New Utility Command:
+- `printCommandFormat`
+- `todo`
+
 ### v3.1.0
 New Utility Command:
 - `readAndParseSubcommandToInt`
 
 Deprecated Utility Commands:
-- parseSubcommandTo2Int: Equivalent to call `readAndParseSubcommandToInt` twice.
+- `parseSubcommandTo2Int`: Equivalent to call `readAndParseSubcommandToInt` twice.
 
 ### v3.0.0
-New feature:
+The simulator is reconstructed.
+
+New Feature:
 - `Util.h` and `Util.c` are added for utility functions benefits developers
 
 New tree supported:
@@ -21,6 +34,9 @@ New tree supported:
 
 New Commands:
 - Search
+
+New Utility Command:
+- `parseSubcommandTo2Int`
 
 ## v2.1.1
 New Commands:
@@ -81,4 +97,4 @@ New Commands:
 ## Reference
 1. [How can I print a binary tree?](https://stackoverflow.com/questions/64660540/how-can-i-print-a-binary-tree) 
 
-The function `print_node` and `print_subtree` in `Commands.c` come from the answer by user Luis Colorado.
+The function `print_node` and `print_subtree` in `Commands.c` is inspired by the answer from user Luis Colorado.

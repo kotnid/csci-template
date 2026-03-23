@@ -9,7 +9,6 @@ Subcommand hashSubcommand(char*);
 TreeType hashTreeType(char*);
 char* reverseHashTreeType(TreeType);
 
-char* commandFormat(Command);
 void printCommandFormat(Command);
 void todo(char*);
 

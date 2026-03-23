@@ -114,3 +114,11 @@ AVLTreeADT AVLInsertNode(TreeNodeADT X, AVLTreeADT T) {
     }
     return NonemptyAVLTree(X, LeftAVLSubtree(T), RightAVLSubtree(T));
 }
+
+bool AVL_IsNodeExist(AVLTreeADT t, int k) {
+    if (AVLTreeIsEmpty(t)) return false;
+    int sign = k-GetNodeValue(AVLRoot(t));
+    if(sign < 0) return AVL_IsNodeExist(LeftAVLSubtree(t), k);
+    if(sign > 0) return AVL_IsNodeExist(RightAVLSubtree(t), k);
+    return true;
+}

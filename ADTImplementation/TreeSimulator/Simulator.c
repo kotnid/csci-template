@@ -10,7 +10,7 @@
 int main() {
     printf("AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
-    printf("Version: 3.1.0\n");
+    printf("Version: 3.2.0\n");
     printf("\n");
 
     TreePtr trees[MAX_TREE_NUMBER];
@@ -18,6 +18,7 @@ int main() {
     char line[100];
     while (true) {
         fgets(line, 100, stdin);
+        if(strcmp(line, "\n") == 0) continue;
         char* command = strtok(line, " \n");
         // printf("[DEBUG] command = |%s|\n", command);
 
