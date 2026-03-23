@@ -5,7 +5,7 @@
 #include <string.h>
 
 Command hashCommand(char* command) {
-    assert(COMMAND_NUMBER == 9);
+    assert(COMMAND_NUMBER == 10);
     if (strcmp(command, "quit") == 0 || strcmp(command, "q") == 0)
         return QUIT;
     else if (strcmp(command, "help") == 0 || strcmp(command, "h") == 0)
@@ -24,6 +24,8 @@ Command hashCommand(char* command) {
         return NEW;
     else if (strcmp(command, "dump_trees") == 0 || strcmp(command, "dt") == 0)
         return DUMP_TREES;
+    else if (strcmp(command, "search") == 0 || strcmp(command, "s") == 0)
+        return SEARCH;
     return UNKNOWN_COMMAND;
 }
 
@@ -39,22 +41,25 @@ Subcommand hashSubcommand(char* subcommand) {
 }
 
 TreeType hashTreeType(char* treeType) {
-    assert(TREE_TYPE_NUMBER == 2);
+    assert(TREE_TYPE_NUMBER == 3);
     if (strcmp(treeType, "binary_search_tree") == 0 || strcmp(treeType, "bst") == 0)
         return BST;
     else if (strcmp(treeType, "avl_tree") == 0 || strcmp(treeType, "avl") == 0)
         return AVL;
+    else if (strcmp(treeType, "splay_tree") == 0 || strcmp(treeType, "spl") == 0)
+        return SPL;
     return UNKNOWN_TREE_TYPE;
 }
 
 char* reverseHashTreeType(TreeType treeType) {
-    assert(TREE_TYPE_NUMBER == 2);
+    assert(TREE_TYPE_NUMBER == 3);
     switch (treeType) {
         case BST:
             return "binary search tree";
-            break;
         case AVL:
             return "AVL tree";
+        case SPL:
+            return "splay tree";
         default:
             assert(false && "[ERROR] UNREACHABLE");
             break;
@@ -63,31 +68,26 @@ char* reverseHashTreeType(TreeType treeType) {
 }
 
 char* commandFormat(Command command) {
-    assert(COMMAND_NUMBER == 9);
+    assert(COMMAND_NUMBER == 10);
     switch (command) {
         case QUIT:
             return "[q]uit";
-            break;
         case HELP:
             break;
         case INSERT:
             return "[i]nsert <index:int> <value:int>";
-            break;
         case INSERT_MANY:
             return "[i]nsert_[m]any <index:int> <count:int> (<value:int> ...)";
-            break;
         case PRINT:
             return "[p]rint <index:int>";
-            break;
         case DELETE:
             return "[d]elete <index:int> <value:int>";
-            break;
         case TRAVERSAL:
             return "[t]raversal <index:int> <type:[in]-order | [pre]-order | [post]-order>";
-            break;
+        case SEARCH:
+            return "[search] <index:int> <value:int>";
         default:
             return "";
-            break;
     }
     return "";
 }

@@ -5,6 +5,7 @@
 #include <string.h>
 #include "ADTs/AVLTree.h"
 #include "ADTs/BinarySearchTree.h"
+#include "ADTs/SplayTree.h"
 #include "Util.h"
 
 /**
@@ -203,7 +204,7 @@ void runInsert(TreePtr trees[]) {
         return;
     }
 
-    assert(TREE_TYPE_NUMBER == 2);
+    assert(TREE_TYPE_NUMBER == 3);
     switch (trees[index]->type) {
         case AVL:
             trees[index]->root = AVLInsertNode(NewTreeNode(val), trees[index]->root);
@@ -211,6 +212,10 @@ void runInsert(TreePtr trees[]) {
             break;
         case BST:
             trees[index]->root = InsertNode(trees[index]->root, NewTreeNode(val));
+            printf("[INFO] TreeNode(%d) inserted in Tree(%d).\n", val, index);
+            break;
+        case SPL:
+            trees[index]->root = Splay_Insert(trees[index]->root, val);
             printf("[INFO] TreeNode(%d) inserted in Tree(%d).\n", val, index);
             break;
         default:
@@ -242,8 +247,9 @@ void runInsertMany(TreePtr trees[]) {
         return;
     }
     int arr[100] = {0}, i = 0;
-    while ((subcommands[0] = strtok(NULL, " \n"))) {
-        sscanf(subcommands[0], "%d", &arr[i]);
+    char* subcommand;
+    while ((subcommand = strtok(NULL, " \n"))) {
+        sscanf(subcommand, "%d", &arr[i]);
         i++;
     }
     if (i < count) {
@@ -318,6 +324,28 @@ static void BST_print_subtree(BinaryTreeADT t,
     }
 }
 
+static void SPL_print_node(SplayTreeADT t, FILE* o) {
+    fprintf(o, "%s+-%d\n", buffer, t->val);
+}
+
+static void SPL_print_subtree(SplayTreeADT t,
+                              FILE* o,
+                              const char* prf_right,
+                              const char* prf_left,
+                              char* buf, int buf_sz) {
+    if (t->r) {
+        int res = snprintf(buf, buf_sz, "%s", prf_right);
+        SPL_print_subtree(t->r, o, "  ", "| ", buf + res, buf_sz - res);
+        *buf = '\0';
+    }
+    SPL_print_node(t, o);
+    if (t->l) {
+        int res = snprintf(buf, buf_sz, "%s", prf_left);
+        SPL_print_subtree(t->l, o, "| ", "  ", buf + res, buf_sz - res);
+        *buf = '\0';
+    }
+}
+
 void runPrintTree(TreePtr trees[]) {
     char* subcommand = strtok(NULL, " \n");
     if (!subcommand) {
@@ -341,6 +369,7 @@ void runPrintTree(TreePtr trees[]) {
     }
 
     printf("[INFO] Printing Tree(%d):\n", index);
+    assert(TREE_TYPE_NUMBER == 3);
     switch (trees[index]->type) {
         case AVL:
             if (trees[index]->root == NULL)
@@ -353,6 +382,12 @@ void runPrintTree(TreePtr trees[]) {
                 printf("(NULL)\n");
             else
                 BST_print_subtree(trees[index]->root, stdout, "  ", "  ", buffer, sizeof buffer);
+            break;
+        case SPL:
+            if (trees[index]->root == NULL)
+                printf("(NULL)\n");
+            else
+                SPL_print_subtree(trees[index]->root, stdout, "  ", "  ", buffer, sizeof buffer);
             break;
         default:
             break;
@@ -420,19 +455,23 @@ void runNew(TreePtr trees[]) {
             trees[index] = (TreePtr)malloc(sizeof(Tree));
             trees[index]->type = AVL;
             trees[index]->root = EmptyAVLTree();
-            printf("[INFO] A new AVL Tree labeled as index %d is created.\n", index);
             break;
         case BST:
             trees[index] = (TreePtr)malloc(sizeof(Tree));
             trees[index]->type = BST;
             trees[index]->root = EmptyBinaryTree();
-            printf("[INFO] A new binary search tree labeled as index %d is created.\n", index);
+            break;
+        case SPL:
+            trees[index] = (TreePtr)malloc(sizeof(Tree));
+            trees[index]->type = SPL;
+            trees[index]->root = NULL;
             break;
         default:
             printf("[ERROR] Invalid argument.\n");
-            printf("Format: [n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree>\n");
-            break;
+            printf("Format: [n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree> | [spl]ay_tree\n");
+            return;
     }
+    printf("[INFO] A new %s labeled as index %d is created.\n", reverseHashTreeType(hashTreeType(subcommand2)), index);
 }
 
 void runDumpTrees(TreePtr trees[]) {
@@ -443,4 +482,28 @@ void runDumpTrees(TreePtr trees[]) {
         else
             printf("Trees[%d] is a %s with root %p\n", i, reverseHashTreeType(trees[i]->type), trees[i]->root);
     }
+}
+
+void runSearch(TreePtr trees[]) {
+    int subcommands[2] = {0};
+    parseSubcommandTo2Int(subcommands, SEARCH);
+    int index = subcommands[0], val = subcommands[1];
+    bool found;
+    switch (trees[index]->type) {
+        case BST:
+            found = IsNodeExist(trees[index]->root, val);
+            break;
+        case AVL:
+            prinf("[WARNING] Not implemented\n");
+        case SPL:
+            trees[index]->root = Splay_Find(trees[index]->root, val, &found);
+            break;
+
+        default:
+            break;
+    }
+    if (found)
+        printf("[INFO] Node(%d) exist in Tree(%d)\n", val, index);
+    else
+        printf("[INFO] Node(%d) does not exist in Tree(%d)\n", val, index);
 }

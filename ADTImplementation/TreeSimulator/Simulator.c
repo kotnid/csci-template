@@ -10,7 +10,7 @@
 int main() {
     printf("AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
-    printf("Version: 2.1.1\n");
+    printf("Version: 3.0.0\n");
     printf("\n");
 
     TreePtr trees[MAX_TREE_NUMBER];
@@ -21,7 +21,7 @@ int main() {
         char* command = strtok(line, " \n");
         // printf("[DEBUG] command = |%s|\n", command);
 
-        assert(COMMAND_NUMBER == 9);
+        assert(COMMAND_NUMBER == 10);
         switch (hashCommand(command)) {
             case QUIT:
                 printf("[INFO] Exit.\n");
@@ -50,6 +50,9 @@ int main() {
                 break;
             case DUMP_TREES:
                 runDumpTrees(trees);
+                break;
+            case SEARCH:
+                runSearch(trees);
                 break;
             default:
                 printf("[WARNING] Unknown command.\n");

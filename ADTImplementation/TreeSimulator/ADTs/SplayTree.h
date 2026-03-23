@@ -3,10 +3,11 @@
 #include <stdbool.h>
 typedef struct SplayTreeCDT* SplayTreeADT;
 
-void splay(SplayTreeADT);
-
 struct SplayTreeCDT {
     int val;
-    SplayTreeADT parent, l, r;
+    SplayTreeADT p, l, r;
 };
+
+SplayTreeADT Splay_Insert(SplayTreeADT t, int val);
+SplayTreeADT Splay_Find(SplayTreeADT t, int val, bool* found);
 #endif

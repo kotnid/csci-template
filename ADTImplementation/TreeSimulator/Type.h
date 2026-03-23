@@ -10,6 +10,7 @@ typedef enum {
     INSERT_MANY,
     NEW,
     DUMP_TREES,
+    SEARCH,
     COMMAND_NUMBER,
     UNKNOWN_COMMAND = 999
 } Command;
@@ -25,6 +26,7 @@ typedef enum {
 typedef enum {
     BST = 0,
     AVL,
+    SPL,
     TREE_TYPE_NUMBER,
     UNKNOWN_TREE_TYPE = 999
 }TreeType;

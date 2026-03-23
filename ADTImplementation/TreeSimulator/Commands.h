@@ -9,4 +9,5 @@ void runDelete(TreePtr[]);
 void runTraversal(TreePtr[]);
 void runNew(TreePtr[]);
 void runDumpTrees(TreePtr[]);
+void runSearch(TreePtr[]);
 #endif
