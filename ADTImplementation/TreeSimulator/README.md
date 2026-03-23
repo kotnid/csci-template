@@ -5,18 +5,25 @@ Aim to visualize tree-kind data structures.
 1. Run `./sim.sh`.
 
 ## History
+### v3.1.0
+New Utility Command:
+- `readAndParseSubcommandToInt`
+
+Deprecated Utility Commands:
+- parseSubcommandTo2Int: Equivalent to call `readAndParseSubcommandToInt` twice.
+
 ### v3.0.0
 New feature:
-- Helper functions like `parseSubcommandTo2Int` are added for better development
+- `Util.h` and `Util.c` are added for utility functions benefits developers
 
 New tree supported:
 - Splay tree
 
-New command:
+New Commands:
 - Search
 
 ## v2.1.1
-New command:
+New Commands:
 - DELETE
 
 ### v2.1.0
@@ -24,46 +31,46 @@ New tree supported:
 - Binary Search Tree
 
 ### v2.0.1
-Modified command:
+Modified Commands:
 - PRINT
 
-Deprecated command:
+Deprecated Commands:
 - CLEAR: Equivalent to call NEW on existing tree.
 
 ### v2.0.0
 The simulator is reconstructed.
 
-New feature:
+New Features:
 - The simulator can now maintain multiple trees
 - The simulator can now handle different kinds of trees
 
-New command:
+New Commands:
 - NEW
 - DUMP_TREE
 
-Modified command:
+Modified Commands:
 - QUIT
 - INSERT
 - INSERT_MANY
 - TRAVERSAL
 
 ### v1.2.1
-Modified command:
+Modified Command:
 - HELP
 
 ### v1.2.0
-New command:
+New Command:
 - INSERT_MANY
 
 ### v1.1.0
-New command added:
+New Command:
 - TRAVERSAL
 
 ### v1.0.0
 New tree supported:
 - AVL Tree
 
-New command:
+New Commands:
 - QUIT
 - HELP
 - INSERT

@@ -8,32 +8,6 @@
 #include "ADTs/SplayTree.h"
 #include "Util.h"
 
-/**
- * @name parseSubcommandWith2Int
- * This function takes 2 subcommands from terminal, parse them to string and save them to a return array.
- * Count check and type check are done, but no further checking is done.
- * Print error message in terminal if failed.
- * @param {int[2]} returnBuffer The return array
- * @param {Command} callerName The instruction name of the caller
- * @return {bool} Success or not
- */
-
-static bool parseSubcommandTo2Int(int returnBuffer[], Command callerName) {
-    char* subcommand1 = strtok(NULL, " \n");
-    char* subcommand2 = strtok(NULL, " \n");
-    if (!subcommand1 || !subcommand2) {
-        printf("[ERROR] Insufficient argument.\n");
-        printCommandFormat(callerName);
-        return false;
-    }
-    if (!sscanf(subcommand1, "%d", &returnBuffer[0]) || !sscanf(subcommand2, "%d", &returnBuffer[1])) {
-        printf("[ERROR] Invalid argument.\n");
-        printCommandFormat(callerName);
-        return false;
-    }
-    return true;
-}
-
 void runHelp() {
     assert(COMMAND_NUMBER == 10);
     char* subcommand = strtok(NULL, " \n");
@@ -187,12 +161,11 @@ void runTraversal(TreePtr trees[]) {
 }
 
 void runInsert(TreePtr trees[]) {
-    int subcommands[2] = {0};
-    if (!parseSubcommandTo2Int(subcommands, INSERT)) {
+    int index, val;
+    if (!readAndParseSubcommandToInt(&index, INSERT) || !readAndParseSubcommandToInt(&val, INSERT)) {
         return;
     }
 
-    int index = subcommands[0], val = subcommands[1];
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -225,12 +198,11 @@ void runInsert(TreePtr trees[]) {
 }
 
 void runInsertMany(TreePtr trees[]) {
-    int subcommands[2] = {0};
-    if (!parseSubcommandTo2Int(subcommands, INSERT_MANY)) {
+    int index, count;
+    if (!readAndParseSubcommandToInt(&index, INSERT_MANY) || !!readAndParseSubcommandToInt(&count, INSERT_MANY)) {
         return;
     }
 
-    int index = subcommands[0], count = subcommands[1];
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -395,12 +367,11 @@ void runPrintTree(TreePtr trees[]) {
 }
 
 void runDelete(TreePtr trees[]) {
-    int subcommands[2] = {0};
-    if (!parseSubcommandTo2Int(subcommands, DELETE)) {
+    int index, val;
+    if (!readAndParseSubcommandToInt(&index, DELETE) || !readAndParseSubcommandToInt(&val, DELETE)) {
         return;
     }
 
-    int index = subcommands[0], val = subcommands[1];
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -432,19 +403,15 @@ void runDelete(TreePtr trees[]) {
 }
 
 void runNew(TreePtr trees[]) {
-    char* subcommand1 = strtok(NULL, " \n");
+    int index;
+    if(!readAndParseSubcommandToInt(&index, NEW)) return;
     char* subcommand2 = strtok(NULL, " \n");
-    if (!subcommand1 || !subcommand2) {
+    if (!subcommand2) {
         printf("[ERROR] Insufficient argument.\n");
         printf("Format: [n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree>\n");
         return;
     }
-    int index;
-    if (!sscanf(subcommand1, "%d", &index)) {
-        printf("[ERROR] Invalid argument.\n");
-        printf("Format: [n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree>\n");
-        return;
-    }
+
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
@@ -485,16 +452,16 @@ void runDumpTrees(TreePtr trees[]) {
 }
 
 void runSearch(TreePtr trees[]) {
-    int subcommands[2] = {0};
-    parseSubcommandTo2Int(subcommands, SEARCH);
-    int index = subcommands[0], val = subcommands[1];
+    int index, val;
+    if (!readAndParseSubcommandToInt(&index, SEARCH) || !readAndParseSubcommandToInt(&val, SEARCH)) return;
     bool found;
     switch (trees[index]->type) {
         case BST:
             found = IsNodeExist(trees[index]->root, val);
             break;
         case AVL:
-            prinf("[WARNING] Not implemented\n");
+            printf("[WARNING] Not implemented\n");
+            break;
         case SPL:
             trees[index]->root = Splay_Find(trees[index]->root, val, &found);
             break;

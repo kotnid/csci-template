@@ -102,3 +102,28 @@ void todo(char* fn) {
     printf("[WARNING] %s has not be implemented.\n", fn);
     printf("Pull requests are welcomed!");
 }
+
+/**
+ * @name readAndParseSubcommandToInt
+ * This function takes 1 subcommands from terminal, parse them to string and save them to a return array.
+ * Count check and type check are done, but no further checking is done.
+ * Print error message in terminal if failed.
+ * @param {int*} ret The address of parsed interger
+ * @param {Command} caller The instruction name of the caller
+ * @return {bool} Success or not
+ */
+
+bool readAndParseSubcommandToInt(int* ret, Command caller) {
+    char* subcommand = strtok(NULL, " \n");
+    if (!subcommand) {
+        printf("[ERROR] Insufficient argument.\n");
+        printCommandFormat(caller);
+        return false;
+    }
+    if (!sscanf(subcommand, "%d", ret)) {
+        printf("[ERROR] Invalid argument.\n");
+        printCommandFormat(caller);
+        return false;
+    }
+    return true;
+}

@@ -10,7 +10,7 @@
 int main() {
     printf("AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
-    printf("Version: 3.0.0\n");
+    printf("Version: 3.1.0\n");
     printf("\n");
 
     TreePtr trees[MAX_TREE_NUMBER];
