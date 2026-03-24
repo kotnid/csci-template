@@ -526,4 +526,6 @@ void runLoadTree(TreePtr trees[]) {
             assert(false && "UNREACHABLE");
             break;
     }
+
+    printf("[INFO] %d nodes is loaded to %s with index %d.\n", count, reverseHashTreeType(treeType), index);
 }

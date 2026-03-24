@@ -5,6 +5,10 @@ Aims to visualize tree-kind data structures.
 1. Run `./sim.sh`.
 
 ## History
+### v3.3.1
+Modified Command:
+- LOAD_TREE
+
 ### v3.3.0
 New Command:
 - LOAD_TREE
