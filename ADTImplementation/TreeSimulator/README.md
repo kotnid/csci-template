@@ -1,10 +1,28 @@
 # Tree Simulator
 Aims to visualize tree-kind data structures.
 
+Now supports binary search trees, AVL trees, splay trees and red black trees.
+
+Some functions are not yet implemented. Pull requests are welcomed.
+
 ## How to Run?
-1. Run `./sim.sh`.
+1. Clone this repo.
+2. Run `./sim.sh` in terminal.
 
 ## History
+### v3.4.0
+A code review is done.
+
+New Tree Supported:
+- Red Black Tree
+
+New Utility Command:
+- `printInfo`
+- `printWarning`
+- `printError`
+- `readSubcommand`
+- `readAndParseSubcommandsToInts`
+
 ### v3.3.1
 Modified Command:
 - LOAD_TREE
@@ -115,3 +133,5 @@ New Commands:
 1. [How can I print a binary tree?](https://stackoverflow.com/questions/64660540/how-can-i-print-a-binary-tree) 
 
 The function `print_node` and `print_subtree` in `Commands.c` is inspired by the answer from user Luis Colorado.
+
+2. CSCI2100

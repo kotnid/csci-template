@@ -73,18 +73,20 @@ Subcommand hashSubcommand(char* subcommand) {
 }
 
 TreeType hashTreeType(char* treeType) {
-    assert(TREE_TYPE_NUMBER == 3);
+    assert(TREE_TYPE_NUMBER == 4);
     if (strcmp(treeType, "binary_search_tree") == 0 || strcmp(treeType, "bst") == 0)
         return BST;
     else if (strcmp(treeType, "avl_tree") == 0 || strcmp(treeType, "avl") == 0)
         return AVL;
     else if (strcmp(treeType, "splay_tree") == 0 || strcmp(treeType, "spl") == 0)
         return SPL;
+    else if (strcmp(treeType, "red_black_tree") == 0 || strcmp(treeType, "rbt") == 0)
+        return RBT;
     return UNKNOWN_TREE_TYPE;
 }
 
 char* reverseHashTreeType(TreeType treeType) {
-    assert(TREE_TYPE_NUMBER == 3);
+    assert(TREE_TYPE_NUMBER == 4);
     switch (treeType) {
         case BST:
             return "binary search tree";
@@ -92,6 +94,8 @@ char* reverseHashTreeType(TreeType treeType) {
             return "AVL tree";
         case SPL:
             return "splay tree";
+        case RBT:
+            return "red black tree";
         default:
             assert(false && "[ERROR] UNREACHABLE");
             break;
@@ -160,11 +164,57 @@ void todo(char* fn) {
 }
 
 /**
+ * @name printInfo
+ * Print message with format "[INFO] message\n" in terminal.
+ * @param {char*} msg The message to print
+ */
+void printInfo(char* msg) {
+    printf("[INFO] %s\n", msg);
+}
+
+/**
+ * @name printWarning
+ * Print info with format "[Warning] message" in yellow color in terminal.
+ * @param {char*} msg The message to print
+ */
+void printWarning(char* msg) {
+    printf("%s[Warning] %s\n%s", "\x1B[33m", msg, "\x1B[0m");
+}
+
+/**
+ * @name printError
+ * Print message with format "[ERROR] message" in red color in terminal.
+ * @param {char*} msg The message to print
+ */
+void printError(char* msg) {
+    printf("%s[ERROR] %s\n%s", "\x1B[31m", msg, "\x1B[0m");
+}
+
+/**
+ * @name readSubcommand
+ * This function reads 1 subcommands from terminal.
+ * Existence check is made, but no further checking is done.
+ * Print error message in terminal if failed.
+ * @param {char**} ret The return address of subcommand read
+ * @param {Command} caller The command name of the caller
+ * @return {bool} Success or not
+ */
+bool readSubcommand(char** ret, Command caller) {
+    *ret = strtok(NULL, " \n");
+    if (!*ret) {
+        printError("Insufficient argument.");
+        printCommandFormat(caller);
+        return false;
+    }
+    return true;
+}
+
+/**
  * @name readAndParseSubcommandToInt
- * This function reads 1 subcommands from terminal, parse it to integer and saves it.
+ * This function reads 1 subcommand from terminal, parse it to integer and saves it.
  * Existence check and type check are made, but no further checking is done.
  * Print error message in terminal if failed.
- * @param {int*} ret The address of parsed interger
+ * @param {int*} ret The return address of parsed interger
  * @param {Command} caller The command name of the caller
  * @return {bool} Success or not
  */
@@ -172,14 +222,46 @@ void todo(char* fn) {
 bool readAndParseSubcommandToInt(int* ret, Command caller) {
     char* subcommand = strtok(NULL, " \n");
     if (!subcommand) {
-        printf("[ERROR] Insufficient argument.\n");
+        printError("Insufficient argument.");
         printCommandFormat(caller);
         return false;
     }
     if (!sscanf(subcommand, "%d", ret)) {
-        printf("[ERROR] Invalid argument.\n");
+        printError("Invalid argument.");
         printCommandFormat(caller);
         return false;
+    }
+    return true;
+}
+
+/**
+ * @name readAndParseSubcommandsToInts
+ * This function reads multiple subcommands from terminal, parse them to integer and saves them.
+ * Existence check and type check are made, but no further checking is done.
+ * Print error message in terminal if failed.
+ * @param {int} cnt The number of subcommands to read
+ * @param {int[]} ret The return array of parsed interger
+ * @param {Command} caller The command name of the caller
+ * @return {bool} Success or not
+ */
+bool readAndParseSubcommandsToInts(int cnt, int ret[], Command caller) {
+    if (cnt > MAX_INT_INPUT_CNT) {
+        printError("Reading too many inputs.");
+        printf("The MAX_INT_INPUT_CNT is set to be %d.\n", MAX_INT_INPUT_CNT);
+        return false;
+    }
+    for (int i = 0; i < cnt; i++) {
+        char* subcommand = strtok(NULL, " \n");
+        if (!subcommand) {
+            printError("Insufficient argument.");
+            printCommandFormat(caller);
+            return false;
+        }
+        if (sscanf(subcommand, "%d", &ret[i]) != 1) {
+            printError("Invalid argument (not an integer).");
+            printCommandFormat(caller);
+            return false;
+        }
     }
     return true;
 }
@@ -189,20 +271,20 @@ bool readAndParseSubcommandToInt(int* ret, Command caller) {
  * This function reads 1 subcommands from terminal, parse it to TreeType and saves it.
  * Existence check and type check are made, but no further checking is done.
  * Print error message in terminal if failed.
- * @param {TreeType*} ret The address of parsed TreeType
+ * @param {TreeType*} ret The return address of parsed TreeType
  * @param {Command} caller The command name of the caller
  * @return {bool} Success or not
  */
-bool readAndParseSubcommandToTreeType(TreeType *ret, Command caller) {
+bool readAndParseSubcommandToTreeType(TreeType* ret, Command caller) {
     char* subcommand = strtok(NULL, " \n");
     if (!subcommand) {
-        printf("[ERROR] Insufficient argument.\n");
+        printError("Insufficient argument.");
         printCommandFormat(caller);
         return false;
     }
     TreeType treeType = hashTreeType(subcommand);
     if (treeType == UNKNOWN_TREE_TYPE) {
-        printf("[ERROR] Invalid argument.\n");
+        printError("Invalid argument.");
         printCommandFormat(caller);
         printf("Tree type can only be [b]inary_[s]earch_[t]ree, [avl]_tree or [spl]ay_tree.\n");
         return false;

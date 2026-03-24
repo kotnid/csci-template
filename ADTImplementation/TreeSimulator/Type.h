@@ -28,6 +28,7 @@ typedef enum {
     BST = 0,
     AVL,
     SPL,
+    RBT,
     TREE_TYPE_NUMBER,
     UNKNOWN_TREE_TYPE = 999
 } TreeType;
