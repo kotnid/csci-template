@@ -29,6 +29,34 @@ Command hashCommand(char* command) {
     return UNKNOWN_COMMAND;
 }
 
+char* reverseHashCommand(Command command) {
+    assert(COMMAND_NUMBER == 10);
+    switch (command) {
+        case QUIT:
+            return "quit";
+        case HELP:
+            return "help";
+        case INSERT:
+            return "insert";
+        case INSERT_MANY:
+            return "insert_many";
+        case PRINT:
+            return "print";
+        case DELETE:
+            return "delete";
+        case TRAVERSAL:
+            return "traversal";
+        case NEW:
+            return "new";
+        case DUMP_TREES:
+            return "dump_trees";
+        case SEARCH:
+            return "search";
+        default:
+            return "unknown";
+    }
+}
+
 Subcommand hashSubcommand(char* subcommand) {
     assert(SUBCOMMAND_NUMBER == 3);
     if (strcmp(subcommand, "in-order") == 0 || strcmp(subcommand, "in") == 0)
@@ -63,31 +91,6 @@ char* reverseHashTreeType(TreeType treeType) {
         default:
             assert(false && "[ERROR] UNREACHABLE");
             break;
-    }
-    return "";
-}
-
-char* commandFormat(Command command) {
-    assert(COMMAND_NUMBER == 10);
-    switch (command) {
-        case QUIT:
-            return "[q]uit";
-        case HELP:
-            break;
-        case INSERT:
-            return "[i]nsert <index:int> <value:int>";
-        case INSERT_MANY:
-            return "[i]nsert_[m]any <index:int> <count:int> (<value:int> ...)";
-        case PRINT:
-            return "[p]rint <index:int>";
-        case DELETE:
-            return "[d]elete <index:int> <value:int>";
-        case TRAVERSAL:
-            return "[t]raversal <index:int> <type:[in]-order | [pre]-order | [post]-order>";
-        case SEARCH:
-            return "[search] <index:int> <value:int>";
-        default:
-            return "";
     }
     return "";
 }

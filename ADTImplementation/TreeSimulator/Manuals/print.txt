@@ -1,0 +1,11 @@
+[Info] Manual for print
+
+FORMAT
+[p]ort <index:int>
+
+DESCRIPTION
+Displays the current structure of the tree located at index <index>.
+Output "(NULL)" if the tree is empty.
+
+NOTE
+1.  Only works on initialized trees.

@@ -10,7 +10,7 @@
 int main() {
     printf("AVLTree Simulator\n");
     printf("Author: K1tsune233\n");
-    printf("Version: 3.2.0\n");
+    printf("Version: 3.2.1\n");
     printf("\n");
 
     TreePtr trees[MAX_TREE_NUMBER];
@@ -38,7 +38,7 @@ int main() {
                 runInsertMany(trees);
                 break;
             case PRINT:
-                runPrintTree(trees);
+                runPrint(trees);
                 break;
             case DELETE:
                 runDelete(trees);
