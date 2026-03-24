@@ -22,7 +22,7 @@ int main() {
         char* command = strtok(line, " \n");
         // printf("[DEBUG] command = |%s|\n", command);
 
-        assert(COMMAND_NUMBER == 10);
+        assert(COMMAND_NUMBER == 11);
         switch (hashCommand(command)) {
             case QUIT:
                 printf("[INFO] Exit.\n");
@@ -54,6 +54,9 @@ int main() {
                 break;
             case SEARCH:
                 runSearch(trees);
+                break;
+            case LOAD_TREE:
+                runLoadTree(trees);
                 break;
             default:
                 printf("[WARNING] Unknown command.\n");

@@ -10,4 +10,5 @@ void runTraversal(TreePtr[]);
 void runNew(TreePtr[]);
 void runDumpTrees(TreePtr[]);
 void runSearch(TreePtr[]);
+void runLoadTree(TreePtr[]);
 #endif

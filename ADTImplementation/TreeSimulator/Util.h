@@ -14,4 +14,5 @@ void printCommandFormat(Command);
 void todo(char*);
 
 bool readAndParseSubcommandToInt(int*, Command);
+bool readAndParseSubcommandToTreeType(TreeType*, Command);
 #endif // UTIL_H

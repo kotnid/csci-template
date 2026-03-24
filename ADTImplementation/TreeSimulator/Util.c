@@ -5,7 +5,7 @@
 #include <string.h>
 
 Command hashCommand(char* command) {
-    assert(COMMAND_NUMBER == 10);
+    assert(COMMAND_NUMBER == 11 && "HAVE NOT EXHAUST ALL COMMAND");
     if (strcmp(command, "quit") == 0 || strcmp(command, "q") == 0)
         return QUIT;
     else if (strcmp(command, "help") == 0 || strcmp(command, "h") == 0)
@@ -26,11 +26,13 @@ Command hashCommand(char* command) {
         return DUMP_TREES;
     else if (strcmp(command, "search") == 0 || strcmp(command, "s") == 0)
         return SEARCH;
+    else if (strcmp(command, "load_tree") == 0 || strcmp(command, "lt") == 0)
+        return LOAD_TREE;
     return UNKNOWN_COMMAND;
 }
 
 char* reverseHashCommand(Command command) {
-    assert(COMMAND_NUMBER == 10);
+    assert(COMMAND_NUMBER == 11 && "HAVE NOT EXHAUST ALL COMMAND");
     switch (command) {
         case QUIT:
             return "quit";
@@ -52,6 +54,8 @@ char* reverseHashCommand(Command command) {
             return "dump_trees";
         case SEARCH:
             return "search";
+        case LOAD_TREE:
+            return "load_tree";
         default:
             return "unknown";
     }
@@ -101,7 +105,7 @@ char* reverseHashTreeType(TreeType treeType) {
  * @param {Command} command The command name
  */
 void printCommandFormat(Command command) {
-    assert(COMMAND_NUMBER == 10 && "HAVE NOT EXHAUST ALL COMMAND");
+    assert(COMMAND_NUMBER == 11 && "HAVE NOT EXHAUST ALL COMMAND");
     switch (command) {
         case QUIT:
             printf("[q]uit\n");
@@ -133,6 +137,9 @@ void printCommandFormat(Command command) {
         case SEARCH:
             printf("[s]earch <index:int> <value:int>\n");
             break;
+        case LOAD_TREE:
+            printf("[l]oad_[t]ree <index:int> <type:str> <count:int> (<value:int> ...)\n");
+            break;
         default:
             assert(false && "UNREACHABLE");
             break;
@@ -154,7 +161,7 @@ void todo(char* fn) {
 
 /**
  * @name readAndParseSubcommandToInt
- * This function takes 1 subcommands from terminal, parse them to string and save them to a return array.
+ * This function reads 1 subcommands from terminal, parse it to integer and saves it.
  * Existence check and type check are made, but no further checking is done.
  * Print error message in terminal if failed.
  * @param {int*} ret The address of parsed interger
@@ -174,5 +181,32 @@ bool readAndParseSubcommandToInt(int* ret, Command caller) {
         printCommandFormat(caller);
         return false;
     }
+    return true;
+}
+
+/**
+ * @name readAndParseSubcommandToInt
+ * This function reads 1 subcommands from terminal, parse it to TreeType and saves it.
+ * Existence check and type check are made, but no further checking is done.
+ * Print error message in terminal if failed.
+ * @param {TreeType*} ret The address of parsed TreeType
+ * @param {Command} caller The command name of the caller
+ * @return {bool} Success or not
+ */
+bool readAndParseSubcommandToTreeType(TreeType *ret, Command caller) {
+    char* subcommand = strtok(NULL, " \n");
+    if (!subcommand) {
+        printf("[ERROR] Insufficient argument.\n");
+        printCommandFormat(caller);
+        return false;
+    }
+    TreeType treeType = hashTreeType(subcommand);
+    if (treeType == UNKNOWN_TREE_TYPE) {
+        printf("[ERROR] Invalid argument.\n");
+        printCommandFormat(caller);
+        printf("Tree type can only be [b]inary_[s]earch_[t]ree, [avl]_tree or [spl]ay_tree.\n");
+        return false;
+    }
+    *ret = treeType;
     return true;
 }

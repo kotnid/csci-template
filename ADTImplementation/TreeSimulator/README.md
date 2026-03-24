@@ -5,6 +5,13 @@ Aims to visualize tree-kind data structures.
 1. Run `./sim.sh`.
 
 ## History
+### v3.3.0
+New Command:
+- LOAD_TREE
+
+New Utility Command:
+- `readAndParseSubcommandToTreeType`
+
 ### v3.2.1
 The manul for each command is updated.
 

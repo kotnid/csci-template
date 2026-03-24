@@ -11,6 +11,7 @@ typedef enum {
     NEW,
     DUMP_TREES,
     SEARCH,
+    LOAD_TREE,
     COMMAND_NUMBER,
     UNKNOWN_COMMAND = 999
 } Command;

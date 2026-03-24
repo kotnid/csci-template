@@ -12,8 +12,8 @@ void runHelp() {
     char* subcommand = strtok(NULL, " \n");
     if (!subcommand) {
         printf("[INFO] Printing command list:\n");
-        for(int i=0; i<COMMAND_NUMBER; i++) {
-            printf("%2d. ", i+1);
+        for (int i = 0; i < COMMAND_NUMBER; i++) {
+            printf("%2d. ", i + 1);
             printCommandFormat((Command)i);
         }
         printf("\n");
@@ -26,12 +26,12 @@ void runHelp() {
     strcat(filePath, reverseHashCommand(hashCommand(subcommand)));
     strcat(filePath, ".txt");
     FILE* manul = fopen(filePath, "r");
-    if(!manul) {
+    if (!manul) {
         printf("[ERROR] Manul not found.\n");
         return;
     }
     char buffer[1000];
-    while(fgets(buffer, 1000, manul)) {
+    while (fgets(buffer, 1000, manul)) {
         printf("%s", buffer);
     }
     fclose(manul);
@@ -222,11 +222,11 @@ void runInsertMany(TreePtr trees[]) {
                 trees[index]->root = Splay_Insert(trees[index]->root, arr[i]);
             }
             break;
-            default:
+        default:
             assert(false && "[ERROR] UNREACHABLE\n");
             break;
-        }
-        printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
+    }
+    printf("[INFO] %d node(s) inserted in Tree(%d).\n", count, index);
 }
 
 char buffer[1024] = {0};
@@ -375,20 +375,17 @@ void runDelete(TreePtr trees[]) {
 
 void runNew(TreePtr trees[]) {
     int index;
+    TreeType treeType;
+    
     if (!readAndParseSubcommandToInt(&index, NEW)) return;
-    char* subcommand2 = strtok(NULL, " \n");
-    if (!subcommand2) {
-        printf("[ERROR] Insufficient argument.\n");
-        printf("Format: [n]ew <index:int> <type:[b]inary_[s]earch_[t]ree | [avl]_tree>\n");
-        return;
-    }
+    if(!readAndParseSubcommandToTreeType(&treeType, NEW)) return;
 
     if (index >= MAX_TREE_NUMBER) {
         printf("[ERROR] Index is too large.\n");
         printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
         return;
     }
-    switch (hashTreeType(subcommand2)) {
+    switch (treeType) {
         case AVL:
             trees[index] = (TreePtr)malloc(sizeof(Tree));
             trees[index]->type = AVL;
@@ -405,11 +402,10 @@ void runNew(TreePtr trees[]) {
             trees[index]->root = NULL;
             break;
         default:
-            printf("[ERROR] Invalid argument.\n");
-            printCommandFormat(NEW);
+            assert(false && "UNREACHABLE");
             return;
     }
-    printf("[INFO] A new %s labeled as index %d is created.\n", reverseHashTreeType(hashTreeType(subcommand2)), index);
+    printf("[INFO] A new %s labeled as index %d is created.\n", reverseHashTreeType(treeType), index);
 }
 
 void runDumpTrees(TreePtr trees[]) {
@@ -435,7 +431,7 @@ void runSearch(TreePtr trees[]) {
         printf("Run new command first.\n");
         return;
     }
-    
+
     bool found;
     switch (trees[index]->type) {
         case BST:
@@ -455,4 +451,79 @@ void runSearch(TreePtr trees[]) {
         printf("[INFO] Node(%d) exists in Tree(%d)\n", val, index);
     else
         printf("[INFO] Node(%d) does not exist in Tree(%d)\n", val, index);
+}
+
+void runLoadTree(TreePtr trees[]) {
+    int index, count;
+    TreeType treeType;
+
+    if (!readAndParseSubcommandToInt(&index, LOAD_TREE)) return;
+    if (!readAndParseSubcommandToTreeType(&treeType, LOAD_TREE)) {
+        return;
+    }
+    if (!readAndParseSubcommandToInt(&count, LOAD_TREE)) return;
+    if (index >= MAX_TREE_NUMBER) {
+        printf("[ERROR] Index is too large.\n");
+        printf("Enter a number less than %d.\n", MAX_TREE_NUMBER);
+        return;
+    }
+    if (trees[index] != NULL) {
+        printf("[ERROR] Loading to occupied tree.\n");
+        printf("Run dump_trees to see more details.");
+        return;
+    }
+    if (count > 100) {
+        printf("[ERROR] Count is too large.\n");
+        printf("Input a number less than 100.\n");
+        return;
+    }
+
+    char* subcommand;
+    int arr[100] = {0}, i = 0;
+    while ((subcommand = strtok(NULL, " \n"))) {
+        sscanf(subcommand, "%d", &arr[i]);
+        i++;
+    }
+    if (i < count) {
+        printf("[ERROR] Insufficient argument.\n");
+        printCommandFormat(LOAD_TREE);
+        return;
+    }
+
+    trees[index] = malloc(sizeof(TreePtr));
+    trees[index]->type = treeType;
+
+    switch (trees[index]->type) {
+        case AVL:
+            printf("[WARNING] load_tree is deprecated for AVL tree.\n");
+            printf("Run insert_many instead.\n");
+            break;
+        case BST:
+            todo("BST load_tree");
+            break;
+        case SPL:
+            SplayTreeADT nodes[100] = {NULL};
+            for (int i = 0; i < count; i++) {
+                if (arr[i] != -1) {
+                    nodes[i] = malloc(sizeof(*nodes[i]));
+                    nodes[i]->val = arr[i];
+                    nodes[i]->l = nodes[i]->r = nodes[i]->p = NULL;
+
+                    if (i > 0) {
+                        int pIndex = (i - 1) / 2;
+                        nodes[i]->p = nodes[pIndex];
+                        if (i % 2 == 1)
+                            nodes[pIndex]->l = nodes[i];
+                        else
+                            nodes[pIndex]->r = nodes[i];
+                    }
+                }
+            }
+            trees[index]->root = nodes[0];
+            break;
+
+        default:
+            assert(false && "UNREACHABLE");
+            break;
+    }
 }
