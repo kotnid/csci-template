@@ -6,13 +6,17 @@
 - leave is the characters 
 
 ##### Huffman's algorithm
-- greedy pick least frequent char 
-- must be a full tree
+- Greedy pick least frequent char 
+- Must be a full tree
 
 ---
 
 ### Exam questions 
-- not exists 
+1. Find the optimal trie for encoding the following sentence. (19 Q1)
+- Count the frequencies of each char 
+- Each time pick 2 least frequent node
+- Finish!
+ 
 
 ---
 
